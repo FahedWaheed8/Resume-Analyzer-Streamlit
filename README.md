@@ -1,86 +1,62 @@
 # ResumeIQ — Smart Resume Keyword Analyzer
 
-> **Resume bullet**: Built an NLP-based resume analyzer that computes job-description similarity using TF-IDF and cosine similarity, improving keyword matching automation.
+> **Resume bullet**: Built an NLP-based resume analyzer using Python and scikit-learn to compute TF-IDF cosine similarity scores against job descriptions.
 
-## Features
+## What it does
 
-- 📄 Upload resume as **PDF or plain text**
-- 💼 Upload job description as **PDF or plain text**
-- 🧠 **TF-IDF + Cosine Similarity** scoring (scikit-learn)
-- 🏷️ **Keyword extraction** across 6 tech categories (languages, frameworks, cloud/devops, databases, concepts, tools)
-- ❌ **Missing skill suggestions** grouped by category
-- 🔍 **Top JD terms not in resume** (TF-IDF based)
+Upload your resume and a job description → get an instant match analysis with keyword insights.
+
+- 📄 Upload resume or job description as **PDF or plain text**
+- 🧠 Computes **TF-IDF cosine similarity** score between resume and JD
+- 🏷️ Extracts and matches **100+ technical keywords** across 6 categories
+- ❌ Highlights **missing skills** grouped by category
+- 🔍 Shows **top JD terms not in resume** via TF-IDF
 - 📊 Three-score dashboard: Overall, Cosine Similarity, Keyword Match %
-- ⚡ Fast, clean UI — no page reloads
 
 ## Tech Stack
 
 | Layer | Tech |
 |-------|------|
-| Backend | Python, Flask |
-| NLP/ML | scikit-learn (TF-IDF, cosine similarity) |
+| Language | Python |
+| UI | Streamlit |
+| NLP / ML | scikit-learn (TF-IDF, cosine similarity) |
 | PDF Parsing | pdfplumber |
-| Frontend | Vanilla HTML/CSS/JS |
-| Container | Docker, Docker Compose |
+| Version Control | Git / GitHub |
 
-## Quick Start
-
-### Option 1: Run directly with Python
+## How to Run
 
 ```bash
-pip install -r requirements.txt
-python app.py
-# Open http://localhost:5000
+# 1. Clone the repo
+git clone https://github.com/FahedWaheed8/Resume-Analyzer-Streamlit.git
+cd Resume-Analyzer-Streamlit
+
+# 2. Create and activate virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. Install dependencies
+pip install streamlit pdfplumber scikit-learn numpy
+
+# 4. Run the app
+streamlit run app.py
 ```
 
-### Option 2: Docker (recommended)
+Then open your browser at `http://localhost:8501`
 
-```bash
-docker-compose up --build
-# Open http://localhost:5000
-```
-
-## How It Works
+## How it Works
 
 1. **Text Extraction** — `pdfplumber` extracts raw text from uploaded PDFs
-2. **Keyword Matching** — regex-based scan against a curated bank of 100+ tech keywords across 6 categories
-3. **TF-IDF Vectorization** — both documents are vectorized using `TfidfVectorizer` with 1-2 gram range
-4. **Cosine Similarity** — measures angular distance between resume and JD vectors (0–100%)
+2. **TF-IDF Vectorization** — both documents vectorized using `TfidfVectorizer` with 1-2 gram range
+3. **Cosine Similarity** — measures similarity between resume and JD vectors (0–100%)
+4. **Keyword Matching** — regex scan against 100+ tech keywords across 6 categories
 5. **Overall Score** — weighted blend: 60% cosine similarity + 40% keyword match %
-6. **Gap Analysis** — highlights keywords present in JD but absent from resume, grouped by category
-
-## API
-
-`POST /analyze`
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `resume_file` | File | PDF or .txt resume |
-| `resume_text` | String | Raw resume text (alternative) |
-| `jd_file` | File | PDF or .txt job description |
-| `jd_text` | String | Raw JD text (alternative) |
-
-**Response:**
-```json
-{
-  "overall_score": 72.4,
-  "similarity_score": 68.1,
-  "keyword_match_pct": 80.0,
-  "matched_keywords": ["python", "docker", "flask", "..."],
-  "missing_keywords": ["kubernetes", "terraform", "..."],
-  "missing_by_category": { "cloud_devops": ["kubernetes"], "...": [] },
-  "missing_tfidf_terms": ["distributed systems", "ci/cd", "..."]
-}
-```
+6. **Gap Analysis** — highlights keywords in JD but missing from resume
 
 ## Project Structure
 
 ```
-resume-analyzer/
-├── app.py              # Flask app + NLP logic
-├── requirements.txt    # Python dependencies
-├── Dockerfile
-├── docker-compose.yml
-└── templates/
-    └── index.html      # Single-file frontend UI
+Resume-Analyzer-Streamlit/
+├── app.py              ← All logic and UI in pure Python
+├── requirements.txt
+└── README.md
 ```
